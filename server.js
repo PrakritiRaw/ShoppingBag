@@ -1,31 +1,36 @@
-import express from 'express';
-import colors from 'colors';
-import dotenv from 'dotenv';
-import morgan from 'morgan';
-import connectDB from './config/db.js';
+import express from "express";
+import colors from "colors";
+import dotenv from "dotenv";
+import morgan from "morgan";
+import connectDB from "./config/db.js";
+import authRoutes from "./routes/authRoute.js";
+import categoryRoutes from "./routes/categoryRoutes.js";
+import productRoutes from "./routes/productRoutes.js";
+import cors from "cors";
 
-//configuring the environment variable file
+//configure env
 dotenv.config();
 
-//database configuration
-connectDB(); //calling the connectDB function to connect to the database
+//databse config
+connectDB();
 
 //rest object
-const app = express(); //creating the express object to use the express methods
+const app = express();
 
-//middlewares
-app.use(express.json()); //this will allow us to accept json data in the body
-app.use(morgan('dev')); //this will log the request in the console
+//middelwares
+app.use(cors());
+app.use(express.json());
+app.use(morgan("dev"));
+
+//routes
+app.use("/api/v1/auth", authRoutes);
+app.use("/api/v1/category", categoryRoutes);
+app.use("/api/v1/product", productRoutes);
 
 //rest api
-app.get('/',(req,res)=>{
-   //with the help of this we are sending the response to the client
-   res.send({       
-    //sending the json object
-    message:'Welcome'
-})
-})
-
+app.get("/", (req, res) => {
+  res.send("<h1>Welcome to ecommerce app</h1>");
+});
 //PORT getting port from .env file
 const  PORT = process.env.PORT || 3002;
 
